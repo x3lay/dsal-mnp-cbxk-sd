@@ -1,802 +1,241 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>APEXHACK - Премиум читы для игр</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Cheat Menu</title>
+    <script src="https://unpkg.com/vue@2.6/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/vant@2.12/lib/vant.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vant@2.12/lib/index.css"/>
+    <script src="https://kit.fontawesome.com/12bede3027.js" crossorigin="anonymous"></script>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style>
+        * { padding: 0; margin: 0; }
+        *:not(input, checkbox, textarea) { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; background: #00cc00; }
+        .cheat-menu {
+            position: fixed; width: 450px; height: 500px; top: calc(50% - 200px); left: calc(50% - 225px);
+            z-index: 999; background-color: #F7F8FA; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar { position: absolute; width: 120px; height: 100%; background: #eceff1; padding: 10px; }
+        .tablinks { background: none; border: none; width: 100%; text-align: left; padding: 8px; cursor: pointer; color: #a0aab2; font-size: 14px; display: flex; align-items: center; }
+        .tablinks:hover { background: #dfe3e6; border-radius: 4px; }
+        .tabcontent { margin-left: 130px; padding: 20px; height: calc(100% - 60px); overflow-y: auto; }
+        .title-bar { background: #424242; color: white; padding: 10px; font-size: 14px; cursor: move; }
+        .func { display: flex; align-items: center; margin: 8px 0; }
+        .func2 { width: 150px; font-size: 14px; color: #455a64; }
+        .checkbox-wrapper-13 input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+        .slider { width: 200px; }
+        .category-title { color: #a0aab2; font-size: 12px; margin: 10px 0; }
+        .config-input { width: 150px; padding: 5px; margin-right: 5px; }
+        .config-btn { padding: 5px 10px; margin: 0 5px; background: #424242; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
 </head>
 <body>
-    <!-- Preloader -->
-    <div class="preloader">
-        <div class="preloader-content">
-            <div class="logo-container">
-                <i class="fas fa-crosshairs"></i>
-                <span>APEX<span class="text-accent">HACK</span></span>
+<div id="app">
+    <div class="cheat-menu" ref="menuMain">
+        <div class="title-bar" @touchstart="titleTouchStart" @touchmove="titleTouchMove">
+            FlipZero | iPA | ID: 1 | Expires: Never
+        </div>
+        <div class="sidebar">
+            <p class="category-title">COMBAT</p>
+            <button class="tablinks" @click="openTab('Aimbot')"><span>Aimbot</span><i class="fa fa-crosshairs" style="margin-left: 5px;"></i></button>
+            <p class="category-title">VISUALS</p>
+            <button class="tablinks" @click="openTab('Visuals')"><span>Visuals</span><i class="fa fa-eye" style="margin-left: 5px;"></i></button>
+            <p class="category-title">SKINS</p>
+            <button class="tablinks" @click="openTab('Skins')"><span>Skins</span><i class="fa fa-paint-brush" style="margin-left: 5px;"></i></button>
+            <p class="category-title">MISC</p>
+            <button class="tablinks" @click="openTab('Misc')"><span>Misc</span><i class="fa fa-tools" style="margin-left: 5px;"></i></button>
+            <p class="category-title">EXPLOITS</p>
+            <button class="tablinks" @click="openTab('Exploits')"><span>Exploits</span><i class="fa fa-bolt" style="margin-left: 5px;"></i></button>
+            <p class="category-title">CONFIG</p>
+            <button class="tablinks" @click="openTab('Config')"><span>Config</span><i class="fa fa-cog" style="margin-left: 5px;"></i></button>
+        </div>
+
+        <div id="Aimbot" class="tabcontent" v-show="currentTab === 'Aimbot'">
+            <div class="func"><span class="func2">Enable</span><input type="checkbox" v-model="cheatOptions.aimbotEnabled"></div>
+            <div class="func"><span class="func2">Perfect Silent</span><input type="checkbox" v-model="cheatOptions.perfectSilent"></div>
+            <div class="func"><span class="func2">Aim Head</span><input type="checkbox" v-model="cheatOptions.aimHead"></div>
+            <div class="func"><span class="func2">Aim Body</span><input type="checkbox" v-model="cheatOptions.aimBody"></div>
+            <div class="func"><span class="func2">Aim Arms</span><input type="checkbox" v-model="cheatOptions.aimArms"></div>
+            <div class="func"><span class="func2">Aim Legs</span><input type="checkbox" v-model="cheatOptions.aimLegs"></div>
+            <div class="func"><span class="func2">Autowall</span><input type="checkbox" v-model="cheatOptions.autowall"></div>
+            <div class="func"><span class="func2">Autofire</span><input type="checkbox" v-model="cheatOptions.autofire"></div>
+            <div class="func"><span class="func2">Dormant Aimbot</span><input type="checkbox" v-model="cheatOptions.dormantAimbot"></div>
+            <div class="func"><span class="func2">Limit Radius</span><input type="checkbox" v-model="cheatOptions.limitRadius"></div>
+            <div class="func"><span class="func2">Shoot Check</span><input type="checkbox" v-model="cheatOptions.shootCheck"></div>
+            <div class="func"><span class="func2">Scope Check</span><input type="checkbox" v-model="cheatOptions.scopeCheck"></div>
+            <div class="func"><span class="func2">Aimbot Speed</span><van-slider v-model="cheatOptions.aimbotSpeed" :min="1" :max="100"/></div>
+            <div class="func"><span class="func2">Radius</span><van-slider v-model="cheatOptions.radius" :min="1" :max="500"/></div>
+            <div class="func"><span class="func2">Radius in Scope</span><van-slider v-model="cheatOptions.radiusInScope" :min="1" :max="500"/></div>
+            <div class="func"><span class="func2">Show Radius</span><input type="checkbox" v-model="cheatOptions.showRadius"></div>
+            <div class="func"><span class="func2">Triggerbot</span><input type="checkbox" v-model="cheatOptions.triggerbot"></div>
+        </div>
+
+        <div id="Visuals" class="tabcontent" v-show="currentTab === 'Visuals'">
+            <div class="func"><span class="func2">ESP</span><input type="checkbox" v-model="cheatOptions.espEnabled"></div>
+            <div class="func"><span class="func2">Only Visible</span><input type="checkbox" v-model="cheatOptions.espOnlyVisible"></div>
+            <div class="func"><span class="func2">Box</span><input type="checkbox" v-model="cheatOptions.espBox"></div>
+            <div class="func"><span class="func2">Box Color R</span><van-slider v-model="cheatOptions.boxColorR" :min="0" :max="255"/></div>
+            <div class="func"><span class="func2">Snaplines</span><input type="checkbox" v-model="cheatOptions.snaplines"></div>
+            <div class="func"><span class="func2">Lines Color R</span><van-slider v-model="cheatOptions.linesColorR" :min="0" :max="255"/></div>
+            <div class="func"><span class="func2">Snaplines Pos</span><van-stepper v-model="cheatOptions.snaplinesPos" :min="1" :max="3" disable-input/></div>
+            <div class="func"><span class="func2">Player Name</span><input type="checkbox" v-model="cheatOptions.playerName"></div>
+            <div class="func"><span class="func2">Health Bar</span><input type="checkbox" v-model="cheatOptions.healthBar"></div>
+            <div class="func"><span class="func2">Weapon Name</span><input type="checkbox" v-model="cheatOptions.weaponName"></div>
+            <div class="func"><span class="func2">Weapon Icon</span><input type="checkbox" v-model="cheatOptions.weaponIcon"></div>
+            <div class="func"><span class="func2">Ammo Bar</span><input type="checkbox" v-model="cheatOptions.ammoBar"></div>
+            <div class="func"><span class="func2">Grenades</span><input type="checkbox" v-model="cheatOptions.grenades"></div>
+            <div class="func"><span class="func2">Show Money</span><input type="checkbox" v-model="cheatOptions.showMoney"></div>
+            <div class="func"><span class="func2">Show Armor</span><input type="checkbox" v-model="cheatOptions.showArmor"></div>
+            <div class="func"><span class="func2">Show Armor Helmet</span><input type="checkbox" v-model="cheatOptions.showArmorHelmet"></div>
+            <div class="func"><span class="func2">Show Player Device</span><input type="checkbox" v-model="cheatOptions.showPlayerDevice"></div>
+            <div class="func"><span class="func2">Show Reload State</span><input type="checkbox" v-model="cheatOptions.showReloadState"></div>
+            <div class="func"><span class="func2">Show Scope State</span><input type="checkbox" v-model="cheatOptions.showScopeState"></div>
+            <div class="func"><span class="func2">Show Bomber</span><input type="checkbox" v-model="cheatOptions.showBomber"></div>
+            <div class="func"><span class="func2">Distance</span><input type="checkbox" v-model="cheatOptions.distance"></div>
+            <div class="func"><span class="func2">Skeleton</span><input type="checkbox" v-model="cheatOptions.skeleton"></div>
+            <div class="func"><span class="func2">Sounds</span><input type="checkbox" v-model="cheatOptions.sounds"></div>
+            <div class="func"><span class="func2">Max Distance</span><van-slider v-model="cheatOptions.maxDistance" :min="10" :max="1000"/></div>
+            <div class="func"><span class="func2">Show Hitboxes</span><input type="checkbox" v-model="cheatOptions.showHitboxes"></div>
+            <div class="func"><span class="func2">Dropped Weapons</span><input type="checkbox" v-model="cheatOptions.droppedWeapons"></div>
+            <div class="func"><span class="func2">Camera FOV</span><van-slider v-model="cheatOptions.cameraFov" :min="60" :max="120"/></div>
+            <div class="func"><span class="func2">Left Arm</span><input type="checkbox" v-model="cheatOptions.leftArm"></div>
+            <div class="func"><span class="func2">Invert Knife Arm</span><input type="checkbox" v-model="cheatOptions.invertKnifeArm"></div>
+            <div class="func"><span class="func2">Viewmodel Pos</span><van-slider v-model="cheatOptions.viewmodelPos" :min="-10" :max="10"/></div>
+            <div class="func"><span class="func2">Viewmodel FOV</span><van-slider v-model="cheatOptions.viewmodelFov" :min="60" :max="120"/></div>
+            <div class="func"><span class="func2">Grenade Name</span><input type="checkbox" v-model="cheatOptions.grenadeName"></div>
+            <div class="func"><span class="func2">Grenade Trajectory</span><input type="checkbox" v-model="cheatOptions.grenadeTrajectory"></div>
+            <div class="func"><span class="func2">Grenade Warning</span><input type="checkbox" v-model="cheatOptions.grenadeWarning"></div>
+            <div class="func"><span class="func2">Detonated Grenades</span><input type="checkbox" v-model="cheatOptions.detonatedGrenades"></div>
+            <div class="func"><span class="func2">Grenade Timer</span><input type="checkbox" v-model="cheatOptions.grenadeTimer"></div>
+            <div class="func"><span class="func2">Grenade Radius</span><input type="checkbox" v-model="cheatOptions.grenadeRadius"></div>
+        </div>
+
+        <div id="Skins" class="tabcontent" v-show="currentTab === 'Skins'">
+            <div class="func"><span class="func2">Skinchange Bypass</span><input type="checkbox" v-model="cheatOptions.skinChanger"></div>
+			<button class="config-btn" @click="createConfig">Add Mantis Genesis</button>
+        </div>
+
+        <div id="Misc" class="tabcontent" v-show="currentTab === 'Misc'">
+            <div class="func"><span class="func2">Fakelags</span><input type="checkbox" v-model="cheatOptions.fakelags"></div>
+            <div class="func"><span class="func2">Lag Timer</span><van-slider v-model="cheatOptions.lagTimer" :min="1" :max="100"/></div>
+            <div class="func"><span class="func2">Unlag Timer</span><van-slider v-model="cheatOptions.unlagTimer" :min="1" :max="100"/></div>
+            <div class="func"><span class="func2">Random Lag</span><input type="checkbox" v-model="cheatOptions.randomLag"></div>
+            <div class="func"><span class="func2">Fake Ping</span><van-slider v-model="cheatOptions.fakePing" :min="1" :max="999"/></div>
+            <div class="func"><span class="func2">Antiaim</span><input type="checkbox" v-model="cheatOptions.antiaim"></div>
+        </div>
+
+        <div id="Exploits" class="tabcontent" v-show="currentTab === 'Exploits'">
+            <div class="func"><span class="func2">Autowin</span><input type="checkbox" v-model="cheatOptions.autowin"></div>
+            <div class="func"><span class="func2">Fast Game</span><input type="checkbox" v-model="cheatOptions.fastGame"></div>
+            <div class="func"><span class="func2">Fast Strafes</span><input type="checkbox" v-model="cheatOptions.fastStrafes"></div>
+            <div class="func"><span class="func2">Fast Walk</span><input type="checkbox" v-model="cheatOptions.fastWalk"></div>
+            <div class="func"><span class="func2">No Recoil</span><input type="checkbox" v-model="cheatOptions.noRecoil"></div>
+            <div class="func"><span class="func2">No Spread</span><input type="checkbox" v-model="cheatOptions.noSpread"></div>
+            <div class="func"><span class="func2">Rapid Fire</span><input type="checkbox" v-model="cheatOptions.rapidFire"></div>
+            <div class="func"><span class="func2">Wallshot</span><input type="checkbox" v-model="cheatOptions.wallshot"></div>
+            <div class="func"><span class="func2">High Damage</span><input type="checkbox" v-model="cheatOptions.highDamage"></div>
+            <div class="func"><span class="func2">High Impulse</span><input type="checkbox" v-model="cheatOptions.highImpulse"></div>
+            <div class="func"><span class="func2">High Armor Pen</span><input type="checkbox" v-model="cheatOptions.highArmorPen"></div>
+            <div class="func"><span class="func2">Instant Reload</span><input type="checkbox" v-model="cheatOptions.instantReload"></div>
+            <div class="func"><span class="func2">Instant Switch</span><input type="checkbox" v-model="cheatOptions.instantSwitch"></div>
+            <div class="func"><span class="func2">One Bullet</span><input type="checkbox" v-model="cheatOptions.oneBullet"></div>
+            <div class="func"><span class="func2">Infinity Clip Ammo</span><input type="checkbox" v-model="cheatOptions.infinityClipAmmo"></div>
+            <div class="func"><span class="func2">Infinity Backpack Ammo</span><input type="checkbox" v-model="cheatOptions.infinityBackpackAmmo"></div>
+            <div class="func"><span class="func2">Infinity Grenades</span><input type="checkbox" v-model="cheatOptions.infinityGrenades"></div>
+            <div class="func"><span class="func2">Fast Knife</span><input type="checkbox" v-model="cheatOptions.fastKnife"></div>
+            <div class="func"><span class="func2">No Grenades Damage</span><input type="checkbox" v-model="cheatOptions.noGrenadesDamage"></div>
+            <div class="func"><span class="func2">Instant Defuse</span><input type="checkbox" v-model="cheatOptions.instantDefuse"></div>
+            <div class="func"><span class="func2">Defuse Everywhere</span><input type="checkbox" v-model="cheatOptions.defuseEverywhere"></div>
+            <div class="func"><span class="func2">Instant Plant</span><input type="checkbox" v-model="cheatOptions.instantPlant"></div>
+            <div class="func"><span class="func2">Infinity Money</span><input type="checkbox" v-model="cheatOptions.infinityMoney"></div>
+            <div class="func"><span class="func2">Kills Hack</span><input type="checkbox" v-model="cheatOptions.killsHack"></div>
+            <div class="func"><span class="func2">Assist Hack</span><input type="checkbox" v-model="cheatOptions.assistHack"></div>
+            <div class="func"><span class="func2">Deaths Hack</span><input type="checkbox" v-model="cheatOptions.deathsHack"></div>
+            <div class="func"><span class="func2">Score Hack</span><input type="checkbox" v-model="cheatOptions.scoreHack"></div>
+            <div class="func"><span class="func2">MVP Hack</span><input type="checkbox" v-model="cheatOptions.mvpHack"></div>
+            <div class="func"><span class="func2">Always Unlock Inputs</span><input type="checkbox" v-model="cheatOptions.alwaysUnlockInputs"></div>
+            <div class="func"><span class="func2">Fly</span><input type="checkbox" v-model="cheatOptions.fly"></div>
+            <div class="func"><span class="func2">Fly Speed</span><van-slider v-model="cheatOptions.flySpeed" :min="1" :max="100"/></div>
+            <div class="func"><span class="func2">Force Lag</span><input type="checkbox" v-model="cheatOptions.forceLag"></div>
+        </div>
+
+        <div id="Config" class="tabcontent" v-show="currentTab === 'Config'">
+            <div class="func"><span class="func2">Overlay</span><input type="checkbox" v-model="cheatOptions.overlay"></div>
+            <div class="func"><span class="func2">Safe Mode</span><input type="checkbox" v-model="cheatOptions.safeMode"></div>
+            <div class="func"><span class="func2">Menu Scale</span><van-slider v-model="cheatOptions.menuScale" :min="50" :max="150"/></div>
+            <div class="func">
+                <span class="func2">Configs</span>
+                <input type="text" v-model="configName" class="config-input" placeholder="Введите имя конфига">
             </div>
-            <div class="loading-bar">
-                <div class="loading-progress"></div>
+            <div class="func">
+                <button class="config-btn" @click="createConfig">Create</button>
+                <button class="config-btn" @click="loadConfig">Load</button>
+                <button class="config-btn" @click="deleteConfig">Delete</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Cursor -->
-    <div class="custom-cursor"></div>
-    <div class="custom-cursor-dot"></div>
-
-    <!-- Navbar -->
-    <header class="navbar">
-        <div class="container">
-            <div class="logo">
-                <i class="fas fa-crosshairs"></i>
-                <span>APEX<span class="text-accent">HACK</span></span>
-            </div>
-            <nav class="nav-links">
-                <a href="#features" class="nav-link">Функции</a>
-                <a href="#pricing" class="nav-link">Цены</a>
-                <a href="#faq" class="nav-link">FAQ</a>
-                <a href="#reviews" class="nav-link">Отзывы</a>
-            </nav>
-            <div class="nav-buttons">
-                <button class="btn btn-outline">Войти</button>
-                <button class="btn btn-primary">Купить сейчас</button>
-                <button class="mobile-menu-toggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Mobile Menu -->
-    <div class="mobile-menu">
-        <div class="mobile-menu-header">
-            <div class="logo">
-                <i class="fas fa-crosshairs"></i>
-                <span>APEX<span class="text-accent">HACK</span></span>
-            </div>
-            <button class="mobile-menu-close">&times;</button>
-        </div>
-        <nav class="mobile-nav-links">
-            <a href="#features" class="mobile-nav-link">Функции</a>
-            <a href="#pricing" class="mobile-nav-link">Цены</a>
-            <a href="#faq" class="mobile-nav-link">FAQ</a>
-            <a href="#reviews" class="mobile-nav-link">Отзывы</a>
-        </nav>
-        <div class="mobile-nav-buttons">
-            <button class="btn btn-outline btn-full">Войти</button>
-            <button class="btn btn-primary btn-full">Купить сейчас</button>
-        </div>
-    </div>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-bg">
-            <div class="hero-particles"></div>
-            <div class="hero-grid"></div>
-        </div>
-        <div class="container">
-            <div class="hero-content">
-                <div class="badge">
-                    <span>Новая версия 4.2 доступна</span>
-                    <div class="badge-glow"></div>
-                </div>
-                <h1 class="hero-title">Доминируй в игре с <span class="text-accent">APEX</span>HACK</h1>
-                <p class="hero-description">Получи преимущество с нашим продвинутым программным обеспечением. Невидимый для античитов, регулярные обновления и круглосуточная поддержка.</p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary btn-lg">
-                        <span>Купить сейчас</span>
-                        <div class="btn-glow"></div>
-                    </button>
-                    <button class="btn btn-outline btn-lg">
-                        Узнать больше
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-                <div class="hero-stats">
-                    <div class="stat-card">
-                        <div class="stat-value">99.8%</div>
-                        <div class="stat-label">Невидимость</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">24/7</div>
-                        <div class="stat-label">Поддержка</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">10K+</div>
-                        <div class="stat-label">Пользователей</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value">Еженедельно</div>
-                        <div class="stat-label">Обновления</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="scroll-indicator">
-            <div class="mouse">
-                <div class="wheel"></div>
-            </div>
-            <div class="arrow">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Продвинутые функции</h2>
-                <p class="section-description">Наш софт предлагает широкий спектр функций, которые дадут вам преимущество над другими игроками.</p>
-            </div>
-
-            <div class="tabs">
-                <div class="tabs-header">
-                    <button class="tab-btn active" data-tab="aimbot">Аимбот</button>
-                    <button class="tab-btn" data-tab="esp">ESP</button>
-                    <button class="tab-btn" data-tab="misc">Прочее</button>
-                    <div class="tab-indicator"></div>
-                </div>
-                <div class="tabs-content">
-                    <div class="tab-panel active" id="aimbot-panel">
-                        <div class="feature-grid">
-                            <div class="feature-content">
-                                <h3 class="feature-title">
-                                    <i class="fas fa-crosshairs"></i>
-                                    Продвинутый аимбот
-                                </h3>
-                                <ul class="feature-list">
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Настраиваемая сила и плавность прицеливания</span>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Выбор приоритетных зон для прицеливания (голова, тело)</span>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Настройка FOV и дистанции</span>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Предсказание движения цели</span>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Компенсация отдачи для всех видов оружия</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="feature-visual">
-                                <div class="feature-visual-content">
-                                    <div class="feature-icon">
-                                        <i class="fas fa-crosshairs"></i>
-                                    </div>
-                                    <div class="feature-visual-overlay">
-                                        <div class="feature-visual-demo">
-                                            <div class="aimbot-demo">
-                                                <div class="aimbot-target"></div>
-                                                <div class="aimbot-crosshair"></div>
-                                                <div class="aimbot-line"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-panel" id="esp-panel">
-                        <div class="feature-grid">
-                            <div class="feature-content">
-                                <h3 class="feature-title">
-                                    <i class="fas fa-eye"></i>
-                                    Расширенный ESP
-                                </h3>
-                                <ul class="feature-list">
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Отображение игроков через стены (боксы, скелеты)</span>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Информация о здоровье, броне и оружии противников</span>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Отображение предметов и лута на карте</span>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Настраиваемые цвета и прозрачность</span>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Радар с отображением всех игроков на карте</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="feature-visual">
-                                <div class="feature-visual-content">
-                                    <div class="feature-icon">
-                                        <i class="fas fa-eye"></i>
-                                    </div>
-                                    <div class="feature-visual-overlay">
-                                        <div class="feature-visual-demo">
-                                            <div class="esp-demo">
-                                                <div class="esp-player">
-                                                    <div class="esp-box"></div>
-                                                    <div class="esp-skeleton"></div>
-                                                    <div class="esp-info">
-                                                        <div class="esp-name">Player</div>
-                                                        <div class="esp-health"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-panel" id="misc-panel">
-                        <div class="feature-grid">
-                            <div class="feature-content">
-                                <h3 class="feature-title">
-                                    <i class="fas fa-bolt"></i>
-                                    Дополнительные функции
-                                </h3>
-                                <ul class="feature-list">
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Быстрое переключение оружия и автоматический выбор лучшего</span>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Автоматический прыжок и стрейф для увеличения скорости</span>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Настройка FOV и удаление визуальных эффектов</span>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Автоматическое использование аптечек и щитов</span>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-check"></i>
-                                        <span>Настраиваемые горячие клавиши для всех функций</span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="feature-visual">
-                                <div class="feature-visual-content">
-                                    <div class="feature-icon">
-                                        <i class="fas fa-bolt"></i>
-                                    </div>
-                                    <div class="feature-visual-overlay">
-                                        <div class="feature-visual-demo">
-                                            <div class="misc-demo">
-                                                <div class="misc-hud">
-                                                    <div class="misc-item">
-                                                        <i class="fas fa-heartbeat"></i>
-                                                        <div class="misc-progress"></div>
-                                                    </div>
-                                                    <div class="misc-item">
-                                                        <i class="fas fa-shield-alt"></i>
-                                                        <div class="misc-progress"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="features-cards">
-                <div class="feature-card">
-                    <div class="feature-card-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3 class="feature-card-title">Невидимость</h3>
-                    <p class="feature-card-description">Наш софт использует продвинутые методы обхода античитов</p>
-                    <div class="feature-card-content">
-                        <p>Мы постоянно обновляем наши методы обхода для всех популярных античитов, включая VAC, BattlEye, EAC и другие.</p>
-                    </div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-card-icon">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <h3 class="feature-card-title">Безопасность</h3>
-                    <p class="feature-card-description">Ваши данные и аккаунты в полной безопасности</p>
-                    <div class="feature-card-content">
-                        <p>Мы не храним ваши личные данные и используем продвинутые методы шифрования для защиты всей информации.</p>
-                    </div>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-card-icon">
-                        <i class="fas fa-medal"></i>
-                    </div>
-                    <h3 class="feature-card-title">Поддержка</h3>
-                    <p class="feature-card-description">Круглосуточная поддержка для всех пользователей</p>
-                    <div class="feature-card-content">
-                        <p>Наша команда поддержки доступна 24/7 через Discord и Telegram, чтобы помочь с любыми вопросами.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="pricing">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Выбери свой план</h2>
-                <p class="section-description">Мы предлагаем различные планы подписки, чтобы удовлетворить потребности всех игроков.</p>
-            </div>
-
-            <div class="pricing-cards">
-                <div class="pricing-card">
-                    <div class="pricing-card-header">
-                        <h3 class="pricing-card-title">Базовый</h3>
-                        <div class="pricing-card-price">
-                            <span class="price">₽799</span>
-                            <span class="period">/ месяц</span>
-                        </div>
-                        <p class="pricing-card-description">Идеально для начинающих игроков</p>
-                    </div>
-                    <div class="pricing-card-content">
-                        <ul class="pricing-features">
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Базовый аимбот</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Простой ESP (боксы)</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Базовые настройки</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Обновления</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="pricing-card-footer">
-                        <button class="btn btn-outline btn-full">Выбрать план</button>
-                    </div>
-                </div>
-                <div class="pricing-card popular">
-                    <div class="pricing-card-badge">Популярный</div>
-                    <div class="pricing-card-header">
-                        <h3 class="pricing-card-title">Премиум</h3>
-                        <div class="pricing-card-price">
-                            <span class="price">₽1499</span>
-                            <span class="period">/ месяц</span>
-                        </div>
-                        <p class="pricing-card-description">Для опытных игроков</p>
-                    </div>
-                    <div class="pricing-card-content">
-                        <ul class="pricing-features">
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Продвинутый аимбот</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Полный ESP (боксы, скелеты, информация)</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Расширенные настройки</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Приоритетные обновления</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Приоритетная поддержка</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="pricing-card-footer">
-                        <button class="btn btn-primary btn-full">Выбрать план</button>
-                    </div>
-                </div>
-                <div class="pricing-card">
-                    <div class="pricing-card-header">
-                        <h3 class="pricing-card-title">VIP</h3>
-                        <div class="pricing-card-price">
-                            <span class="price">₽2999</span>
-                            <span class="period">/ месяц</span>
-                        </div>
-                        <p class="pricing-card-description">Максимальные возможности</p>
-                    </div>
-                    <div class="pricing-card-content">
-                        <ul class="pricing-features">
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Элитный аимбот с предсказанием движения</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Полный ESP с расширенными функциями</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Все дополнительные функции</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Мгновенные обновления</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>VIP поддержка 24/7</span>
-                            </li>
-                            <li>
-                                <i class="fas fa-check"></i>
-                                <span>Эксклюзивный доступ к бета-функциям</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="pricing-card-footer">
-                        <button class="btn btn-outline btn-full">Выбрать план</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Showcase Section -->
-    <section class="showcase">
-        <div class="container">
-            <div class="showcase-content">
-                <div class="showcase-text">
-                    <h2 class="showcase-title">Смотри, как работает наш софт</h2>
-                    <p class="showcase-description">Наш софт обеспечивает плавную работу и максимальное преимущество в игре. Посмотрите демонстрацию в действии.</p>
-                    <ul class="showcase-features">
-                        <li>
-                            <i class="fas fa-check"></i>
-                            <span>Плавный аимбот с настраиваемыми параметрами</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-check"></i>
-                            <span>Продвинутый ESP с отображением всей необходимой информации</span>
-                        </li>
-                        <li>
-                            <i class="fas fa-check"></i>
-                            <span>Интуитивно понятный интерфейс с гибкими настройками</span>
-                        </li>
-                    </ul>
-                    <button class="btn btn-primary">Смотреть полное демо</button>
-                </div>
-                <div class="showcase-video">
-                    <div class="video-container">
-                        <div class="video-overlay">
-                            <button class="play-button">
-                                <i class="fas fa-play"></i>
-                            </button>
-                        </div>
-                        <img src="https://via.placeholder.com/600x400" alt="Демонстрация работы софта">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section id="faq" class="faq">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Часто задаваемые вопросы</h2>
-                <p class="section-description">Ответы на самые популярные вопросы о нашем программном обеспечении.</p>
-            </div>
-
-            <div class="accordion">
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <span>Безопасно ли использовать ваш софт?</span>
-                        <i class="fas fa-plus"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <p>Да, наш софт разработан с использованием продвинутых методов обхода античитов. Мы постоянно обновляем наши методы, чтобы обеспечить максимальную безопасность для наших пользователей. Однако, мы рекомендуем использовать наш софт на альтернативных аккаунтах для дополнительной безопасности.</p>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <span>Как часто выходят обновления?</span>
-                        <i class="fas fa-plus"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <p>Мы выпускаем обновления еженедельно, а также экстренные обновления в случае изменений в античитах игр. Пользователи VIP плана получают обновления в первую очередь.</p>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <span>Какие игры поддерживаются?</span>
-                        <i class="fas fa-plus"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <p>Наш софт поддерживает большинство популярных шутеров, включая Apex Legends, Call of Duty: Warzone, PUBG, CS:GO, Valorant и другие. Полный список поддерживаемых игр доступен в нашем Discord сообществе.</p>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <span>Как происходит оплата и доставка?</span>
-                        <i class="fas fa-plus"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <p>Мы принимаем различные способы оплаты, включая криптовалюты, банковские карты и электронные кошельки. После оплаты вы получите доступ к личному кабинету, где сможете скачать софт и получить инструкции по установке.</p>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <span>Есть ли гарантия возврата денег?</span>
-                        <i class="fas fa-plus"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <p>Да, мы предлагаем 24-часовую гарантию возврата денег, если наш софт не работает должным образом. Однако, возврат не предоставляется в случае бана аккаунта или если вы просто передумали использовать наш софт.</p>
-                    </div>
-                </div>
-                <div class="accordion-item">
-                    <div class="accordion-header">
-                        <span>Какие системные требования?</span>
-                        <i class="fas fa-plus"></i>
-                    </div>
-                    <div class="accordion-content">
-                        <p>Наш софт имеет минимальное влияние на производительность и работает на большинстве современных компьютеров. Минимальные требования: Windows 10/11, 4 ГБ ОЗУ, процессор Intel Core i3 или AMD Ryzen 3, 2 ГБ свободного места на диске.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Reviews Section -->
-    <section id="reviews" class="reviews">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Отзывы пользователей</h2>
-                <p class="section-description">Узнайте, что говорят о нас наши пользователи.</p>
-            </div>
-
-            <div class="reviews-slider">
-                <div class="reviews-track">
-                    <div class="review-card">
-                        <div class="review-header">
-                            <div class="review-avatar">АК</div>
-                            <div class="review-info">
-                                <h4 class="review-name">Алексей К.</h4>
-                                <p class="review-plan">Премиум план</p>
-                            </div>
-                        </div>
-                        <div class="review-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <p class="review-text">Использую уже 3 месяца, ни одного бана. Аимбот работает плавно, настройки позволяют сделать все под себя. Техподдержка отвечает быстро.</p>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-header">
-                            <div class="review-avatar">МС</div>
-                            <div class="review-info">
-                                <h4 class="review-name">Максим С.</h4>
-                                <p class="review-plan">VIP план</p>
-                            </div>
-                        </div>
-                        <div class="review-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <p class="review-text">Лучший софт, который я использовал. ESP работает идеально, видно всех игроков даже на большом расстоянии. Стоит своих денег на 100%.</p>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-header">
-                            <div class="review-avatar">ИД</div>
-                            <div class="review-info">
-                                <h4 class="review-name">Игорь Д.</h4>
-                                <p class="review-plan">Базовый план</p>
-                            </div>
-                        </div>
-                        <div class="review-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="far fa-star"></i>
-                        </div>
-                        <p class="review-text">Начал с базового плана, скоро перейду на премиум. Функций достаточно, но хочется больше настроек. В целом доволен, рекомендую.</p>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-header">
-                            <div class="review-avatar">ВП</div>
-                            <div class="review-info">
-                                <h4 class="review-name">Владимир П.</h4>
-                                <p class="review-plan">Премиум план</p>
-                            </div>
-                        </div>
-                        <div class="review-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <p class="review-text">Отличный софт, использую уже полгода. Особенно нравится ESP и радар, очень помогает в игре. Рекомендую всем, кто хочет улучшить свои навыки.</p>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-header">
-                            <div class="review-avatar">КА</div>
-                            <div class="review-info">
-                                <h4 class="review-name">Кирилл А.</h4>
-                                <p class="review-plan">VIP план</p>
-                            </div>
-                        </div>
-                        <div class="review-rating">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <p class="review-text">VIP план стоит своих денег. Получаешь все обновления первым, поддержка отвечает моментально. Софт работает стабильно, никаких проблем за 4 месяца использования.</p>
-                    </div>
-                </div>
-                <div class="slider-controls">
-                    <button class="slider-arrow prev">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <div class="slider-dots">
-                        <span class="dot active"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                    </div>
-                    <button class="slider-arrow next">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <div class="cta-content">
-                <h2 class="cta-title">Готов доминировать в игре?</h2>
-                <p class="cta-description">Присоединяйся к тысячам игроков, которые уже используют наш софт и побеждают в каждой игре.</p>
-                <div class="cta-buttons">
-                    <button class="btn btn-primary btn-lg">
-                        <span>Купить сейчас</span>
-                        <div class="btn-glow"></div>
-                    </button>
-                    <button class="btn btn-outline btn-lg">
-                        <i class="fab fa-discord"></i>
-                        Присоединиться к Discord
-                    </button>
-                </div>
-                <div class="cta-countdown">
-                    <div class="countdown-title">До конца акции осталось:</div>
-                    <div class="countdown-timer">
-                        <div class="countdown-item">
-                            <div class="countdown-value" id="countdown-days">00</div>
-                            <div class="countdown-label">Дней</div>
-                        </div>
-                        <div class="countdown-separator">:</div>
-                        <div class="countdown-item">
-                            <div class="countdown-value" id="countdown-hours">00</div>
-                            <div class="countdown-label">Часов</div>
-                        </div>
-                        <div class="countdown-separator">:</div>
-                        <div class="countdown-item">
-                            <div class="countdown-value" id="countdown-minutes">00</div>
-                            <div class="countdown-label">Минут</div>
-                        </div>
-                        <div class="countdown-separator">:</div>
-                        <div class="countdown-item">
-                            <div class="countdown-value" id="countdown-seconds">00</div>
-                            <div class="countdown-label">Секунд</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-about">
-                    <div class="logo">
-                        <i class="fas fa-crosshairs"></i>
-                        <span>APEX<span class="text-accent">HACK</span></span>
-                    </div>
-                    <p class="footer-description">Лучшие решения для геймеров с 2019 года.</p>
-                    <div class="footer-social">
-                        <a href="#" class="social-link">
-                            <i class="fab fa-discord"></i>
-                        </a>
-                        <a href="#" class="social-link">
-                            <i class="fab fa-telegram"></i>
-                        </a>
-                        <a href="#" class="social-link">
-                            <i class="fab fa-youtube"></i>
-                        </a>
-                        <a href="#" class="social-link">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="footer-links">
-                    <h3 class="footer-title">Ссылки</h3>
-                    <ul class="footer-menu">
-                        <li><a href="#features">Функции</a></li>
-                        <li><a href="#pricing">Цены</a></li>
-                        <li><a href="#faq">FAQ</a></li>
-                        <li><a href="#reviews">Отзывы</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h3 class="footer-title">Поддержка</h3>
-                    <ul class="footer-menu">
-                        <li><a href="#">Discord</a></li>
-                        <li><a href="#">Telegram</a></li>
-                        <li><a href="#">Email</a></li>
-                        <li><a href="#">Инструкции</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h3 class="footer-title">Правовая информация</h3>
-                    <ul class="footer-menu">
-                        <li><a href="#">Условия использования</a></li>
-                        <li><a href="#">Политика конфиденциальности</a></li>
-                        <li><a href="#">Отказ от ответственности</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p class="copyright">&copy; <span id="current-year">2023</span> APEXHACK. Все права защищены.</p>
-                <div class="payment-methods">
-                    <i class="fab fa-cc-visa"></i>
-                    <i class="fab fa-cc-mastercard"></i>
-                    <i class="fab fa-bitcoin"></i>
-                    <i class="fab fa-ethereum"></i>
-                    <i class="fab fa-cc-paypal"></i>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Back to Top Button -->
-    <button class="back-to-top">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
-    <!-- Scripts -->
-    <script src="script.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                currentTab: 'Aimbot',
+                configName: '',
+                cheatOptions: {
+                    aimbotEnabled: false, perfectSilent: false, aimHead: false, aimBody: false, aimArms: false, aimLegs: false,
+                    autowall: false, autofire: false, dormantAimbot: false, limitRadius: false, shootCheck: false, scopeCheck: false,
+                    aimbotSpeed: 50, radius: 100, radiusInScope: 50, showRadius: false, radiusColorR: 255, hitboxMultiplier: 1,
+                    hitboxValue: 2, triggerbot: false,
+                    espEnabled: false, espOnlyVisible: false, espBox: false, boxColorR: 255, snaplines: false, linesColorR: 255,
+                    snaplinesPos: 1, playerName: false, healthBar: false, weaponName: false, weaponIcon: false, ammoBar: false,
+                    grenades: false, showMoney: false, showArmor: false, showArmorHelmet: false, showPlayerDevice: false,
+                    showReloadState: false, showScopeState: false, showBomber: false, distance: false, skeleton: false,
+                    sounds: false, maxDistance: 500, showHitboxes: false, droppedWeapons: false, cameraFov: 90, leftArm: false,
+                    invertKnifeArm: false, viewmodelPos: 0, viewmodelFov: 90, grenadeName: false, grenadeTrajectory: false,
+                    grenadeWarning: false, detonatedGrenades: false, grenadeTimer: false, grenadeRadius: false,
+                    skinChanger: false, medalChanger: false, frameChanger: false, itemChanger: false, inventory: false,
+                    fakelags: false, lagTimer: 50, unlagTimer: 50, randomLag: false, fakePing: 100, antiaim: false,
+                    autowin: false, fastGame: false, fastStrafes: false, fastWalk: false, noRecoil: false, noSpread: false,
+                    rapidFire: false, wallshot: false, highDamage: false, highImpulse: false, highArmorPen: false,
+                    instantReload: false, instantSwitch: false, oneBullet: false, infinityClipAmmo: false, infinityBackpackAmmo: false,
+                    infinityGrenades: false, fastKnife: false, noGrenadesDamage: false, instantDefuse: false, defuseEverywhere: false,
+                    instantPlant: false, infinityMoney: false, killsHack: false, assistHack: false, deathsHack: false,
+                    scoreHack: false, mvpHack: false, alwaysUnlockInputs: false, fly: false, flySpeed: 50, forceLag: false,
+                    overlay: false, safeMode: false, menuScale: 100
+                },
+                touchStartX: 0, touchStartY: 0, menuLastX: 0, menuLastY: 0
+            }
+        },
+        methods: {
+            openTab(tabName) { this.currentTab = tabName; },
+            createConfig() { console.log('Создан конфиг:', this.configName); },
+            loadConfig() { console.log('Загружен конфиг:', this.configName); },
+            deleteConfig() { console.log('Удален конфиг:', this.configName); },
+            titleTouchStart(event) {
+                this.touchStartX = parseInt(event.touches[0].clientX);
+                this.touchStartY = parseInt(event.touches[0].clientY);
+                var ayMenu = this.$refs.menuMain;
+                this.menuLastX = ayMenu.offsetLeft;
+                this.menuLastY = ayMenu.offsetTop;
+            },
+            titleTouchMove(event) {
+                event.preventDefault();
+                var distanceX = event.touches[0].clientX - this.touchStartX;
+                var distanceY = event.touches[0].clientY - this.touchStartY;
+                var ayMenu = this.$refs.menuMain;
+                ayMenu.style.left = this.menuLastX + distanceX + "px";
+                ayMenu.style.top = this.menuLastY + distanceY + "px";
+            }
+        },
+        mounted() {
+            Vue.use(vant.Slider);
+            Vue.use(vant.Stepper);
+        }
+    });
+</script>
 </body>
 </html>
