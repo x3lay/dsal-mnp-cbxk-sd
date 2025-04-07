@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheat Menu</title>
+    <script src="https://unpkg.com/vue@2.6/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/vant@2.12/lib/vant.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/vant@2.12/lib/index.css"/>
+    <script src="https://kit.fontawesome.com/12bede3027.js" crossorigin="anonymous"></script>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style>
+        * { padding: 0; margin: 0; }
+        *:not(input, checkbox, textarea) { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif; background: #00cc00; }
+        .cheat-menu {
+            position: fixed; width: 450px; height: 500px; top: calc(50% - 200px); left: calc(50% - 225px);
+            z-index: 999; background-color: #F7F8FA; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar { position: absolute; width: 120px; height: 100%; background: #eceff1; padding: 10px; }
+        .tablinks { background: none; border: none; width: 100%; text-align: left; padding: 8px; cursor: pointer; color: #a0aab2; font-size: 14px; display: flex; align-items: center; }
+        .tablinks:hover { background: #dfe3e6; border-radius: 4px; }
+        .tabcontent { margin-left: 130px; padding: 20px; height: calc(100% - 60px); overflow-y: auto; }
+        .title-bar { background: #424242; color: white; padding: 10px; font-size: 14px; cursor: move; }
+        .func { display: flex; align-items: center; margin: 8px 0; }
+        .func2 { width: 150px; font-size: 14px; color: #455a64; }
+        .checkbox-wrapper-13 input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; }
+        .slider { width: 200px; }
+        .category-title { color: #a0aab2; font-size: 12px; margin: 10px 0; }
+        .config-input { width: 150px; padding: 5px; margin-right: 5px; }
+        .config-btn { padding: 5px 10px; margin: 0 5px; background: #424242; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div class="cheat-menu" ref="menuMain">
+        <div class="title-bar" @touchstart="titleTouchStart" @touchmove="titleTouchMove">
+            FlipZero | iPA | ID: 1 | Expires: Never
+        </div>
+        <div class="sidebar">
+            <p class="category-title">COMBAT</p>
+            <button class="tablinks" @click="openTab('Aimbot')"><span>Aimbot</span><i class="fa fa-crosshairs" style="margin-left: 5px;"></i></button>
+            <p class="category-title">VISUALS</p>
+            <button class="tablinks" @click="openTab('Visuals')"><span>Visuals</span><i class="fa fa-eye" style="margin-left: 5px;"></i></button>
+            <p class="category-title">SKINS</p>
+            <button class="tablinks" @click="openTab('Skins')"><span>Skins</span><i class="fa fa-paint-brush" style="margin-left: 5px;"></i></button>
+            <p class="category-title">MISC</p>
+            <button class="tablinks" @click="openTab('Misc')"><span>Misc</span><i class="fa fa-tools" style="margin-left: 5px;"></i></button>
+            <p class="category-title">EXPLOITS</p>
+            <button class="tablinks" @click="openTab('Exploits')"><span>Exploits</span><i class="fa fa-bolt" style="margin-left: 5px;"></i></button>
+            <p class="category-title">CONFIG</p>
+            <button class="tablinks" @click="openTab('Config')"><span>Config</span><i class="fa fa-cog" style="margin-left: 5px;"></i></button>
+        </div>
+
+        <div id="Aimbot" class="tabcontent" v-show="currentTab === 'Aimbot'">
+            <div class="func"><span class="func2">Enable</span><input type="checkbox" v-model="cheatOptions.aimbotEnabled"></div>
+            <div class="func"><span class="func2">Perfect Silent</span><input type="checkbox" v-model="cheatOptions.perfectSilent"></div>
+            <div class="func"><span class="func2">Aim Head</span><input type="checkbox" v-model="cheatOptions.aimHead"></div>
+            <div class="func"><span class="func2">Aim Body</span><input type="checkbox" v-model="cheatOptions.aimBody"></div>
+            <div class="func"><span class="func2">Aim Arms</span><input type="checkbox" v-model="cheatOptions.aimArms"></div>
+            <div class="func"><span class="func2">Aim Legs</span><input type="checkbox" v-model="cheatOptions.aimLegs"></div>
+            <div class="func"><span class="func2">Autowall</span><input type="checkbox" v-model="cheatOptions.autowall"></div>
+            <div class="func"><span class="func2">Autofire</span><input type="checkbox" v-model="cheatOptions.autofire"></div>
+            <div class="func"><span class="func2">Dormant Aimbot</span><input type="checkbox" v-model="cheatOptions.dormantAimbot"></div>
+            <div class="func"><span class="func2">Limit Radius</span><input type="checkbox" v-model="cheatOptions.limitRadius"></div>
+            <div class="func"><span class="func2">Shoot Check</span><input type="checkbox" v-model="cheatOptions.shootCheck"></div>
+            <div class="func"><span class="func2">Scope Check</span><input type="checkbox" v-model="cheatOptions.scopeCheck"></div>
+            <div class="func"><span class="func2">Aimbot Speed</span><van-slider v-model="cheatOptions.aimbotSpeed" :min="1" :max="100"/></div>
+            <div class="func"><span class="func2">Radius</span><van-slider v-model="cheatOptions.radius" :min="1" :max="500"/></div>
+            <div class="func"><span class="func2">Radius in Scope</span><van-slider v-model="cheatOptions.radiusInScope" :min="1" :max="500"/></div>
+            <div class="func"><span class="func2">Show Radius</span><input type="checkbox" v-model="cheatOptions.showRadius"></div>
+            <div class="func"><span class="func2">Triggerbot</span><input type="checkbox" v-model="cheatOptions.triggerbot"></div>
+        </div>
+
+        <div id="Visuals" class="tabcontent" v-show="currentTab === 'Visuals'">
+            <div class="func"><span class="func2">ESP</span><input type="checkbox" v-model="cheatOptions.espEnabled"></div>
+            <div class="func"><span class="func2">Only Visible</span><input type="checkbox" v-model="cheatOptions.espOnlyVisible"></div>
+            <div class="func"><span class="func2">Box</span><input type="checkbox" v-model="cheatOptions.espBox"></div>
+            <div class="func"><span class="func2">Box Color R</span><van-slider v-model="cheatOptions.boxColorR" :min="0" :max="255"/></div>
+            <div class="func"><span class="func2">Snaplines</span><input type="checkbox" v-model="cheatOptions.snaplines"></div>
+            <div class="func"><span class="func2">Lines Color R</span><van-slider v-model="cheatOptions.linesColorR" :min="0" :max="255"/></div>
+            <div class="func"><span class="func2">Snaplines Pos</span><van-stepper v-model="cheatOptions.snaplinesPos" :min="1" :max="3" disable-input/></div>
+            <div class="func"><span class="func2">Player Name</span><input type="checkbox" v-model="cheatOptions.playerName"></div>
+            <div class="func"><span class="func2">Health Bar</span><input type="checkbox" v-model="cheatOptions.healthBar"></div>
+            <div class="func"><span class="func2">Weapon Name</span><input type="checkbox" v-model="cheatOptions.weaponName"></div>
+            <div class="func"><span class="func2">Weapon Icon</span><input type="checkbox" v-model="cheatOptions.weaponIcon"></div>
+            <div class="func"><span class="func2">Ammo Bar</span><input type="checkbox" v-model="cheatOptions.ammoBar"></div>
+            <div class="func"><span class="func2">Grenades</span><input type="checkbox" v-model="cheatOptions.grenades"></div>
+            <div class="func"><span class="func2">Show Money</span><input type="checkbox" v-model="cheatOptions.showMoney"></div>
+            <div class="func"><span class="func2">Show Armor</span><input type="checkbox" v-model="cheatOptions.showArmor"></div>
+            <div class="func"><span class="func2">Show Armor Helmet</span><input type="checkbox" v-model="cheatOptions.showArmorHelmet"></div>
+            <div class="func"><span class="func2">Show Player Device</span><input type="checkbox" v-model="cheatOptions.showPlayerDevice"></div>
+            <div class="func"><span class="func2">Show Reload State</span><input type="checkbox" v-model="cheatOptions.showReloadState"></div>
+            <div class="func"><span class="func2">Show Scope State</span><input type="checkbox" v-model="cheatOptions.showScopeState"></div>
+            <div class="func"><span class="func2">Show Bomber</span><input type="checkbox" v-model="cheatOptions.showBomber"></div>
+            <div class="func"><span class="func2">Distance</span><input type="checkbox" v-model="cheatOptions.distance"></div>
+            <div class="func"><span class="func2">Skeleton</span><input type="checkbox" v-model="cheatOptions.skeleton"></div>
+            <div class="func"><span class="func2">Sounds</span><input type="checkbox" v-model="cheatOptions.sounds"></div>
+            <div class="func"><span class="func2">Max Distance</span><van-slider v-model="cheatOptions.maxDistance" :min="10" :max="1000"/></div>
+            <div class="func"><span class="func2">Show Hitboxes</span><input type="checkbox" v-model="cheatOptions.showHitboxes"></div>
+            <div class="func"><span class="func2">Dropped Weapons</span><input type="checkbox" v-model="cheatOptions.droppedWeapons"></div>
+            <div class="func"><span class="func2">Camera FOV</span><van-slider v-model="cheatOptions.cameraFov" :min="60" :max="120"/></div>
+            <div class="func"><span class="func2">Left Arm</span><input type="checkbox" v-model="cheatOptions.leftArm"></div>
+            <div class="func"><span class="func2">Invert Knife Arm</span><input type="checkbox" v-model="cheatOptions.invertKnifeArm"></div>
+            <div class="func"><span class="func2">Viewmodel Pos</span><van-slider v-model="cheatOptions.viewmodelPos" :min="-10" :max="10"/></div>
+            <div class="func"><span class="func2">Viewmodel FOV</span><van-slider v-model="cheatOptions.viewmodelFov" :min="60" :max="120"/></div>
+            <div class="func"><span class="func2">Grenade Name</span><input type="checkbox" v-model="cheatOptions.grenadeName"></div>
+            <div class="func"><span class="func2">Grenade Trajectory</span><input type="checkbox" v-model="cheatOptions.grenadeTrajectory"></div>
+            <div class="func"><span class="func2">Grenade Warning</span><input type="checkbox" v-model="cheatOptions.grenadeWarning"></div>
+            <div class="func"><span class="func2">Detonated Grenades</span><input type="checkbox" v-model="cheatOptions.detonatedGrenades"></div>
+            <div class="func"><span class="func2">Grenade Timer</span><input type="checkbox" v-model="cheatOptions.grenadeTimer"></div>
+            <div class="func"><span class="func2">Grenade Radius</span><input type="checkbox" v-model="cheatOptions.grenadeRadius"></div>
+        </div>
+
+        <div id="Skins" class="tabcontent" v-show="currentTab === 'Skins'">
+            <div class="func"><span class="func2">Skinchange Bypass</span><input type="checkbox" v-model="cheatOptions.skinChanger"></div>
+			<button class="config-btn" @click="createConfig">Add Mantis Genesis</button>
+        </div>
+
+        <div id="Misc" class="tabcontent" v-show="currentTab === 'Misc'">
+            <div class="func"><span class="func2">Fakelags</span><input type="checkbox" v-model="cheatOptions.fakelags"></div>
+            <div class="func"><span class="func2">Lag Timer</span><van-slider v-model="cheatOptions.lagTimer" :min="1" :max="100"/></div>
+            <div class="func"><span class="func2">Unlag Timer</span><van-slider v-model="cheatOptions.unlagTimer" :min="1" :max="100"/></div>
+            <div class="func"><span class="func2">Random Lag</span><input type="checkbox" v-model="cheatOptions.randomLag"></div>
+            <div class="func"><span class="func2">Fake Ping</span><van-slider v-model="cheatOptions.fakePing" :min="1" :max="999"/></div>
+            <div class="func"><span class="func2">Antiaim</span><input type="checkbox" v-model="cheatOptions.antiaim"></div>
+        </div>
+
+        <div id="Exploits" class="tabcontent" v-show="currentTab === 'Exploits'">
+            <div class="func"><span class="func2">Autowin</span><input type="checkbox" v-model="cheatOptions.autowin"></div>
+            <div class="func"><span class="func2">Fast Game</span><input type="checkbox" v-model="cheatOptions.fastGame"></div>
+            <div class="func"><span class="func2">Fast Strafes</span><input type="checkbox" v-model="cheatOptions.fastStrafes"></div>
+            <div class="func"><span class="func2">Fast Walk</span><input type="checkbox" v-model="cheatOptions.fastWalk"></div>
+            <div class="func"><span class="func2">No Recoil</span><input type="checkbox" v-model="cheatOptions.noRecoil"></div>
+            <div class="func"><span class="func2">No Spread</span><input type="checkbox" v-model="cheatOptions.noSpread"></div>
+            <div class="func"><span class="func2">Rapid Fire</span><input type="checkbox" v-model="cheatOptions.rapidFire"></div>
+            <div class="func"><span class="func2">Wallshot</span><input type="checkbox" v-model="cheatOptions.wallshot"></div>
+            <div class="func"><span class="func2">High Damage</span><input type="checkbox" v-model="cheatOptions.highDamage"></div>
+            <div class="func"><span class="func2">High Impulse</span><input type="checkbox" v-model="cheatOptions.highImpulse"></div>
+            <div class="func"><span class="func2">High Armor Pen</span><input type="checkbox" v-model="cheatOptions.highArmorPen"></div>
+            <div class="func"><span class="func2">Instant Reload</span><input type="checkbox" v-model="cheatOptions.instantReload"></div>
+            <div class="func"><span class="func2">Instant Switch</span><input type="checkbox" v-model="cheatOptions.instantSwitch"></div>
+            <div class="func"><span class="func2">One Bullet</span><input type="checkbox" v-model="cheatOptions.oneBullet"></div>
+            <div class="func"><span class="func2">Infinity Clip Ammo</span><input type="checkbox" v-model="cheatOptions.infinityClipAmmo"></div>
+            <div class="func"><span class="func2">Infinity Backpack Ammo</span><input type="checkbox" v-model="cheatOptions.infinityBackpackAmmo"></div>
+            <div class="func"><span class="func2">Infinity Grenades</span><input type="checkbox" v-model="cheatOptions.infinityGrenades"></div>
+            <div class="func"><span class="func2">Fast Knife</span><input type="checkbox" v-model="cheatOptions.fastKnife"></div>
+            <div class="func"><span class="func2">No Grenades Damage</span><input type="checkbox" v-model="cheatOptions.noGrenadesDamage"></div>
+            <div class="func"><span class="func2">Instant Defuse</span><input type="checkbox" v-model="cheatOptions.instantDefuse"></div>
+            <div class="func"><span class="func2">Defuse Everywhere</span><input type="checkbox" v-model="cheatOptions.defuseEverywhere"></div>
+            <div class="func"><span class="func2">Instant Plant</span><input type="checkbox" v-model="cheatOptions.instantPlant"></div>
+            <div class="func"><span class="func2">Infinity Money</span><input type="checkbox" v-model="cheatOptions.infinityMoney"></div>
+            <div class="func"><span class="func2">Kills Hack</span><input type="checkbox" v-model="cheatOptions.killsHack"></div>
+            <div class="func"><span class="func2">Assist Hack</span><input type="checkbox" v-model="cheatOptions.assistHack"></div>
+            <div class="func"><span class="func2">Deaths Hack</span><input type="checkbox" v-model="cheatOptions.deathsHack"></div>
+            <div class="func"><span class="func2">Score Hack</span><input type="checkbox" v-model="cheatOptions.scoreHack"></div>
+            <div class="func"><span class="func2">MVP Hack</span><input type="checkbox" v-model="cheatOptions.mvpHack"></div>
+            <div class="func"><span class="func2">Always Unlock Inputs</span><input type="checkbox" v-model="cheatOptions.alwaysUnlockInputs"></div>
+            <div class="func"><span class="func2">Fly</span><input type="checkbox" v-model="cheatOptions.fly"></div>
+            <div class="func"><span class="func2">Fly Speed</span><van-slider v-model="cheatOptions.flySpeed" :min="1" :max="100"/></div>
+            <div class="func"><span class="func2">Force Lag</span><input type="checkbox" v-model="cheatOptions.forceLag"></div>
+        </div>
+
+        <div id="Config" class="tabcontent" v-show="currentTab === 'Config'">
+            <div class="func"><span class="func2">Overlay</span><input type="checkbox" v-model="cheatOptions.overlay"></div>
+            <div class="func"><span class="func2">Safe Mode</span><input type="checkbox" v-model="cheatOptions.safeMode"></div>
+            <div class="func"><span class="func2">Menu Scale</span><van-slider v-model="cheatOptions.menuScale" :min="50" :max="150"/></div>
+            <div class="func">
+                <span class="func2">Configs</span>
+                <input type="text" v-model="configName" class="config-input" placeholder="Введите имя конфига">
+            </div>
+            <div class="func">
+                <button class="config-btn" @click="createConfig">Create</button>
+                <button class="config-btn" @click="loadConfig">Load</button>
+                <button class="config-btn" @click="deleteConfig">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                currentTab: 'Aimbot',
+                configName: '',
+                cheatOptions: {
+                    aimbotEnabled: false, perfectSilent: false, aimHead: false, aimBody: false, aimArms: false, aimLegs: false,
+                    autowall: false, autofire: false, dormantAimbot: false, limitRadius: false, shootCheck: false, scopeCheck: false,
+                    aimbotSpeed: 50, radius: 100, radiusInScope: 50, showRadius: false, radiusColorR: 255, hitboxMultiplier: 1,
+                    hitboxValue: 2, triggerbot: false,
+                    espEnabled: false, espOnlyVisible: false, espBox: false, boxColorR: 255, snaplines: false, linesColorR: 255,
+                    snaplinesPos: 1, playerName: false, healthBar: false, weaponName: false, weaponIcon: false, ammoBar: false,
+                    grenades: false, showMoney: false, showArmor: false, showArmorHelmet: false, showPlayerDevice: false,
+                    showReloadState: false, showScopeState: false, showBomber: false, distance: false, skeleton: false,
+                    sounds: false, maxDistance: 500, showHitboxes: false, droppedWeapons: false, cameraFov: 90, leftArm: false,
+                    invertKnifeArm: false, viewmodelPos: 0, viewmodelFov: 90, grenadeName: false, grenadeTrajectory: false,
+                    grenadeWarning: false, detonatedGrenades: false, grenadeTimer: false, grenadeRadius: false,
+                    skinChanger: false, medalChanger: false, frameChanger: false, itemChanger: false, inventory: false,
+                    fakelags: false, lagTimer: 50, unlagTimer: 50, randomLag: false, fakePing: 100, antiaim: false,
+                    autowin: false, fastGame: false, fastStrafes: false, fastWalk: false, noRecoil: false, noSpread: false,
+                    rapidFire: false, wallshot: false, highDamage: false, highImpulse: false, highArmorPen: false,
+                    instantReload: false, instantSwitch: false, oneBullet: false, infinityClipAmmo: false, infinityBackpackAmmo: false,
+                    infinityGrenades: false, fastKnife: false, noGrenadesDamage: false, instantDefuse: false, defuseEverywhere: false,
+                    instantPlant: false, infinityMoney: false, killsHack: false, assistHack: false, deathsHack: false,
+                    scoreHack: false, mvpHack: false, alwaysUnlockInputs: false, fly: false, flySpeed: 50, forceLag: false,
+                    overlay: false, safeMode: false, menuScale: 100
+                },
+                touchStartX: 0, touchStartY: 0, menuLastX: 0, menuLastY: 0
+            }
+        },
+        methods: {
+            openTab(tabName) { this.currentTab = tabName; },
+            createConfig() { console.log('Создан конфиг:', this.configName); },
+            loadConfig() { console.log('Загружен конфиг:', this.configName); },
+            deleteConfig() { console.log('Удален конфиг:', this.configName); },
+            titleTouchStart(event) {
+                this.touchStartX = parseInt(event.touches[0].clientX);
+                this.touchStartY = parseInt(event.touches[0].clientY);
+                var ayMenu = this.$refs.menuMain;
+                this.menuLastX = ayMenu.offsetLeft;
+                this.menuLastY = ayMenu.offsetTop;
+            },
+            titleTouchMove(event) {
+                event.preventDefault();
+                var distanceX = event.touches[0].clientX - this.touchStartX;
+                var distanceY = event.touches[0].clientY - this.touchStartY;
+                var ayMenu = this.$refs.menuMain;
+                ayMenu.style.left = this.menuLastX + distanceX + "px";
+                ayMenu.style.top = this.menuLastY + distanceY + "px";
+            }
+        },
+        mounted() {
+            Vue.use(vant.Slider);
+            Vue.use(vant.Stepper);
+        }
+    });
+</script>
+</body>
+</html>
